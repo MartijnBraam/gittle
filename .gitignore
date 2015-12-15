@@ -40,3 +40,6 @@ nosetests.xml
 
 # gvim
 .*.swp
+
+# Virtualenv
+/venv
