@@ -137,7 +137,7 @@ class Gittle(object):
 
         # Build ignore filter
         self.hidden_regexes = copy.copy(self.HIDDEN_REGEXES)
-        self.hidden_regexes.extend(self._get_ignore_regexes())
+        self.hidden_regexes.extend(list(self._get_ignore_regexes()))
         self.ignore_filter = utils.paths.path_filter_regex(self.hidden_regexes)
         self.filters = [
             self.ignore_filter,
