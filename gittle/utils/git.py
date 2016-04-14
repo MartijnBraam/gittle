@@ -19,21 +19,27 @@ from funky import first, true_only, rest, negate, transform
 if os.sys.version_info.major > 2 or (os.sys.version_info.major == 2 and os.sys.version_info.minor < 7):
     basestring = str
 
+
 def is_readable(store):
     def fn(info):
         path, mode, sha = info
         return path is None or (type(store[sha]) is Blob and not is_binary(store[sha].data))
+
     return fn
+
 
 def is_readable_change(store):
     def fn(change):
         return all(
-            map(is_readable(store), change)
+                map(is_readable(store), change)
         )
+
     return fn
+
 
 def is_unreadable_change(store):
     return negate(is_readable_change(store))
+
 
 def dummy_diff(*args, **kwargs):
     return ''
@@ -66,11 +72,11 @@ def commit_info(commit):
     message_lines = commit.message.splitlines()
     summary = first(message_lines, '')
     description = '\n'.join(
-        true_only(
-            rest(
-                message_lines
+            true_only(
+                    rest(
+                            message_lines
+                    )
             )
-        )
     )
 
     return {
@@ -103,15 +109,15 @@ def changes_to_pairs(changes):
     return [
         ((oldpath, oldmode, oldsha), (newpath, newmode, newsha),)
         for (oldpath, newpath), (oldmode, newmode), (oldsha, newsha) in changes
-    ]
+        ]
 
 
 def _diff_pairs(object_store, pairs, diff_func, diff_type='text'):
     for old, new in pairs:
-        yield { 'diff': diff_func(object_store, old, new),
-                'new': change_to_dict(new),
-                'old': change_to_dict(old),
-                'type': diff_type }
+        yield {'diff': diff_func(object_store, old, new),
+               'new': change_to_dict(new),
+               'old': change_to_dict(old),
+               'type': diff_type}
 
 
 def diff_changes(object_store, changes, diff_func=object_diff, filter_binary=True):
@@ -145,7 +151,7 @@ def changes_to_blobs(object_store, basepath, pairs):
     return [
         (obj_blob(object_store, old), path_blob(basepath, new),)
         for old, new in pairs
-    ]
+        ]
 
 
 def change_to_dict(info):
@@ -198,10 +204,10 @@ def classic_tree_diff(object_store, old_tree, new_tree, filter_binary=None):
 
     # Write to output (our string)
     patch.write_tree_diff(
-        output,
-        object_store,
-        old_tree,
-        new_tree
+            output,
+            object_store,
+            old_tree,
+            new_tree
     )
 
     return output.getvalue()
@@ -240,8 +246,8 @@ def subrefs(refs_dict, base):
     base = base or ''
     keys = refs_dict.keys()
     subkeys = map(
-        partial(subkey, base),
-        keys
+            partial(subkey, base),
+            keys
     )
     key_pairs = zip(keys, subkeys)
 
@@ -249,7 +255,7 @@ def subrefs(refs_dict, base):
         newkey: refs_dict[oldkey]
         for oldkey, newkey in key_pairs
         if newkey
-    }
+        }
 
 
 def clean_refs(refs):
@@ -257,4 +263,4 @@ def clean_refs(refs):
         ref: sha
         for ref, sha in refs.items()
         if not ref.endswith('^{}')
-    }
+        }

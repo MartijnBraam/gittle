@@ -21,9 +21,10 @@ def path_filter_regex(regexes):
 
     def _filter(path, abspath):
         return any([
-            cre.match(abspath)
-            for cre in compiled_regexes
-        ])
+                       cre.match(abspath)
+                       for cre in compiled_regexes
+                       ])
+
     return _filter
 
 
@@ -33,8 +34,9 @@ def combine_filters(filters):
         filter_results = [
             _filter(path, abspath)
             for _filter in filters
-        ]
+            ]
         return all(filter_results)
+
     return combined_filter
 
 
@@ -46,39 +48,38 @@ def clean_relative_paths(paths):
     return [
         p[2:] if p.startswith('./') else p
         for p in paths
-    ]
+        ]
 
 
 def dir_subpaths(root_path):
     """Get paths in a given directory"""
     paths = []
     for dirname, dirnames, filenames in os.walk(root_path):
-
         # Add directory paths
         abs_dirnames = [
             os.path.join(dirname, subdirname)
             for subdirname in dirnames
-        ]
+            ]
         rel_dirnames = [
             os.path.relpath(abs_dirname, root_path)
             for abs_dirname in abs_dirnames
-        ]
+            ]
         paths.extend(zip(
-            rel_dirnames,
-            abs_dirnames,
+                rel_dirnames,
+                abs_dirnames,
         ))
 
         abs_filenames = [
             os.path.join(dirname, filename)
             for filename in filenames
-        ]
+            ]
         rel_filenames = [
             os.path.relpath(abs_filename, root_path)
             for abs_filename in abs_filenames
-        ]
+            ]
         paths.extend(zip(
-            rel_filenames,
-            abs_filenames,
+                rel_filenames,
+                abs_filenames,
         ))
 
     return paths

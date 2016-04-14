@@ -37,9 +37,9 @@ def get_protocol(url):
 
     try:
         return first_true([
-            schemer(url, parsed)
-            for schemer in schemers
-        ])
+                              schemer(url, parsed)
+                              for schemer in schemers
+                              ])
     except:
         pass
     return None
@@ -70,4 +70,3 @@ def parse_url(url, defaults=None):
         'password': password,
         'path': path,
     }
-
