@@ -272,12 +272,14 @@ class Gittle(object):
         return wants_func
 
     def _get_ignore_regexes(self):
+        # TODO: Read all .gitignore files
         gitignore_filename = os.path.join(self.path, '.gitignore')
         if not os.path.exists(gitignore_filename):
             return []
         lines = open(gitignore_filename).readlines()
         globers = map(lambda line: line.rstrip(), lines)
-        return utils.paths.globers_to_regex(globers)
+        # TODO: Filter comments from ignorefile
+        return utils.paths.globers_to_regex(list(globers))
 
     # Get the absolute path for a file in the git repo
     def abspath(self, repo_file):
